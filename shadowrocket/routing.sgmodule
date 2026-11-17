@@ -1,0 +1,10 @@
+#!name=五组手动分流
+#!desc=GPT 美国；Instagram、X、Facebook 香港；TikTok 台湾。须先建立 README 中的五个 select 策略组。
+
+# This module references existing local groups; it contains no proxy credentials.
+[Rule]
+RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/gpt.list,GPT-美国手动
+RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/instagram.list,Instagram-香港手动
+RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/x.list,X-香港手动
+RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/tiktok.list,TikTok-台湾手动
+RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/facebook.list,Facebook-香港手动

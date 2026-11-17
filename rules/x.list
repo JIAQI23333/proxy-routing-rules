@@ -1,0 +1,7 @@
+# X / Twitter core domains.
+DOMAIN-SUFFIX,x.com
+DOMAIN-SUFFIX,twitter.com
+DOMAIN-SUFFIX,t.co
+DOMAIN-SUFFIX,twimg.com
+DOMAIN-SUFFIX,twitteroauth.com
+DOMAIN-SUFFIX,tweetdeck.com
