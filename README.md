@@ -1,6 +1,6 @@
 # 五组手动分流
 
-一套共享域名规则，供 Shadowrocket 和使用 Mihomo 的 Clash Party / Clash Verge Rev 使用。各设备独立选择节点。
+一套共享分流规则，供 Shadowrocket 和使用 Mihomo 的 Clash Party / Clash Verge Rev 使用。覆盖五个服务的主站及已知图片、上传、登录、支付、语音、视频和消息依赖，各设备独立选择节点。
 
 | 服务 | 策略组名称（须完全一致） | 手动选择的节点地区 |
 | --- | --- | --- |
@@ -21,18 +21,50 @@ rules/
   x.list
   tiktok.list
   facebook.list
+  LICENSE-GPL-2.0
+  LICENSE-v2fly-MIT
 shadowrocket/routing.sgmodule
 mihomo/override.js
 README.md
 LICENSE
 ```
 
-`.list` 只写 `DOMAIN`、`DOMAIN-SUFFIX` 匹配项，不带策略名；两种客户端引用同一文件。仓库只存公开规则和配置逻辑，节点、订阅地址、密码、Token 留在客户端。
+`.list` 使用两种客户端共同支持的 `DOMAIN`、`DOMAIN-SUFFIX`、`DOMAIN-KEYWORD`、`IP-CIDR` 和 `IP-ASN`，不带策略名；两种客户端引用同一文件。仓库只存公开规则和配置逻辑，节点、订阅地址、密码、Token 留在客户端。
+
+## 覆盖范围与来源
+
+2026-11-17 从原来的 32 条起步规则扩充为 **1090 条**。合并 blackmatrix7 和 v2fly/domain-list-community 的对应服务清单，并补充 OpenAI 官方网络说明及语音 IP。规则数量不等于功能数量：一个域名后缀可以覆盖大量子域名，完整功能也可能依赖第三方身份验证、文件存储、CDN 或 IP 连接。
+
+| 规则集 | 原数量 → 当前数量 | 此次补充重点 |
+| --- | --- | --- |
+| GPT | 6 → 463 | 图片/文件存储、异步任务、验证登录、支付、语音；含官方 411 条语音 IP |
+| Instagram | 3 → 74 | 图片 CDN、私信短链、视频及相关服务域名 |
+| X / Twitter | 6 → 33 | 图片/视频 CDN、直播、登录、短链和 IP |
+| TikTok | 11 → 52 | `ibyteimg.com` 图片、私信贴纸、直播、上传、区域 CDN、Shop |
+| Facebook | 6 → 468 | 图片/视频、登录、消息/Messenger、CDN 和 Meta IP/ASN |
+
+来源快照：
+
+- [blackmatrix7/ios_rule_script](https://github.com/blackmatrix7/ios_rule_script/tree/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Shadowrocket)，提交 `0b6897dc17e0c513d25449c935a9694818e32f0c`。
+- [v2fly/domain-list-community](https://github.com/v2fly/domain-list-community/tree/41504eae2a11f305fe88cfc605cf6c105a80bf5a/data)，提交 `41504eae2a11f305fe88cfc605cf6c105a80bf5a`；Facebook 另合并其 Messenger 清单。
+- [OpenAI 官方网络说明](https://help.openai.com/en/articles/9247338-network-recommendations-for-chatgpt-errors-on-web-and-apps)与[语音 IP 数据](https://openai.com/chatgpt-voice.json)，后者的源数据时间为 `2026-11-16T01:33:53.175979+00:00`。
+
+去重时保留域名后缀覆盖范围，移除已被同一集合后缀完整覆盖的重复域名。GPT 的异步任务主机正则转为两个客户端都支持的 `chatgpt-async-webps-prod-` 关键词匹配，未加入整个 Azure 域名。
+
+## 覆盖优先的取舍
+
+- GPT 保留上游的 Auth0、Stripe、Sentry 等共享依赖，并补全官方列出的 WorkOS、Cloudflare 验证等地址。这些域名被其他软件使用时也会命中美国组。`ibyteimg.com` 在参考清单中属于字节系依赖，放入 TikTok 台湾组；GPT 的图片/文件域名包含 `oaiusercontent.com`、`oaistatic.com` 及 Azure 存储和异步处理地址。
+- 未采用 OpenAI 上游的 `IP-ASN,20473`：它覆盖 [Vultr 的网络](https://docs.vultr.com/vultr-ip-space)，会把无关云服务器一起划入 GPT。改用 OpenAI 官方发布的语音 IP 明细，并保留上游两条单 IP 规则。
+- TikTok 排除 CapCut、Trae、MarsCode、TikTok Music 的独立域名；X 排除独立的 `grok.com`；GPT 排除独立的 `sora.com`、`crixet.com`；Facebook 排除 WhatsApp、Oculus、Workplace 的独立域名。保留完成目标软件功能所用的共享依赖，因此这些其他软件访问共享域名时仍可能命中。
+- `USER-AGENT` 和 `PROCESS-NAME` 没有放入共享文件：两种客户端及不同操作系统的支持不一致。TikTok 使用域名和关键词匹配。广告/统计标记在导入时仅作为来源标注，不生成拦截规则。
+- Instagram 的重复专属域名归入 Instagram 组并优先匹配；共享的 `fbcdn.net`、`fbsbx.com`、Meta IP 和 AS32934 归入 Facebook 香港组。仅凭共享域名或 IP 无法可靠区分具体 App，其他 Meta 服务访问相同资源也会命中该组。ASN 匹配依赖客户端的 ASN 数据库。
+
+这些是已知依赖的扩充清单，无法保证未来所有功能或所有客户端版本永远不遗漏。此仓库保存的是上述来源的快照，**客户端刷新本仓库不等于实时合并上游变化**；上游新增域名、语音 IP 变更后仍需更新本仓库。
 
 ## 可复制的实施计划
 
 ```text
-1. 在 JIAQI23333 账号下建立 Public 仓库 proxy-routing-rules，默认分支 main，使用 MIT 许可证。
+1. 使用 JIAQI23333/proxy-routing-rules Public 仓库，默认分支 main；原创配置采用 MIT，派生规则遵循各来源许可证。
 2. 维护五份 rules/*.list，共享给所有设备；只包含 GPT、Instagram、X、TikTok、Facebook。
 3. Shadowrocket：先建立表中的五个 select 策略组，加入对应地区的本地节点，再导入并启用 routing.sgmodule。
 4. Clash Party：导入 override.js 为 JavaScript 覆写，绑定正在使用的订阅并重新应用。
@@ -79,20 +111,30 @@ Mihomo 对五份 `.list` 按 `86400` 秒周期更新，也可在客户端手动�
 
 依次访问 `chatgpt.com`、`instagram.com`、`x.com`、`tiktok.com`、`facebook.com`，在连接日志中确认对应组及选中节点。测试前断开旧连接；仅看到页面打开，不能证明出口正确。客户端须实际接管被测流量。
 
-这是核心域名起步清单，不是完整服务域名数据库。登录、上传、语音、直播以及第三方验证可能使用额外域名或 IP，发现遗漏后按连接日志补充。共享 CDN 无法仅凭域名判断由哪个 App 发起：例如 `fbcdn.net` 统一归 Facebook 香港组，Instagram 访问它时也遵循该规则。
+除首页外，按实际使用功能逐项验收：
 
-TikTok 的分流只决定命中流量的代理出口，不修改账号地区、SIM、定位或内容推荐地区。当前范围不包含抖音、CapCut、Trae、Grok 等额外服务，也不按 iOS / macOS / Windows 复制规则。
+| 服务 | 建议测试 |
+| --- | --- |
+| GPT | 登录、文字对话、上传图片/文件、生成并下载图片、语音对话 |
+| Instagram | 动态图片、Reels、Story、私信附件、上传 |
+| X | 登录、图片、视频、发帖附件、私信、Spaces |
+| TikTok | 视频播放、图片帖、私信贴纸、上传、直播、Shop（账号可用时） |
+| Facebook | 登录、动态图片、Reels、上传、Messenger 附件和通话 |
+
+语音、直播和通话还要求所选节点及客户端能承载相应流量；例如 OpenAI 官方语音说明使用 UDP 3478。IP 条目保留 `no-resolve`，不会为了匹配规则主动解析每个域名。流量是否实际进入客户端、DNS、UDP 支持和节点服务可用性仍需检查。
+
+TikTok 的分流只决定命中流量的代理出口，不修改账号地区、SIM、定位或内容推荐地区。仍只有表内五个策略组，不按 iOS / macOS / Windows 复制规则。
 
 维护原则：增删域名改 `.list`；换节点在本机组内选择；改分流映射同步修改模块和 JS；不用时禁用模块/取消覆写关联并重新应用原配置。
 
-2026-11-17 已通过脚本语法、重复应用、原配置保留及 32 条域名规则检查，并用 Mihomo v1.19.34 在本机模拟节点验证五份规则加载与地区候选筛选。尚未在真实 Shadowrocket / Clash 客户端及实际代理出口上完成端到端测试，设备导入后仍须按上述步骤验收。
+2026-11-17 已用 Mihomo v1.19.34 验证全部 1090 条规则加载，并通过关键图片/文件、登录验证、语音、CDN、私信和直播域名的匹配检查；同时核对了官方 411 条语音 IP、分组映射、原配置保留及脚本重复应用。规则能加载和命中并不能代替真实账号下的功能测试。尚未在真实 Shadowrocket / Clash 客户端及实际代理出口上完成端到端测试，设备导入后仍须按上述步骤验收。
 
 ## 格式与域名参考
 
 - [Mihomo 规则集合格式](https://wiki.metacubex.one/config/rule-providers/)与[代理组配置](https://wiki.metacubex.one/config/proxy-groups/)：`classical` + `text`、`select`、`include-all`、`filter`。
 - [Clash Party 官方脚本执行实现](https://github.com/mihomo-party-org/clash-party/blob/main/src/main/core/factory.ts)与[Clash Verge Rev 自定义脚本](https://www.clashverge.dev/guide/script.html)：共用 `main(config)` 入口。
 - [Shadowrocket 社区维护手册](https://github.com/LOWERTOP/Shadowrocket/wiki)：策略组、模块、规则资源更新。
-- [OpenAI 网络域名说明](https://help.openai.com/en/articles/9247338-network-recommendations-for-chatgpt-errors-on-web-and-apps)：GPT 核心域名参考；通用第三方服务域名未整体纳入。
-- [blackmatrix7 服务规则](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash)：交叉核对社交平台核心域名；未订阅或整包引入上游规则。
+- [OpenAI 网络域名说明](https://help.openai.com/en/articles/9247338-network-recommendations-for-chatgpt-errors-on-web-and-apps)：GPT 依赖和语音连接要求。
+- [blackmatrix7 服务规则](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash)及 [v2fly 服务域名](https://github.com/v2fly/domain-list-community/tree/master/data)：扩充来源，精确版本见上文和文件头。
 
-MIT License，见 [LICENSE](LICENSE)。
+原创客户端配置和说明采用 [MIT License](LICENSE)。`rules/*.list` 包含改编的第三方规则，按 [GPL v2](rules/LICENSE-GPL-2.0) 提供；其中 v2fly 内容保留其 [MIT 版权与许可声明](rules/LICENSE-v2fly-MIT)。每份规则文件均注明来源、上游版本和修改日期。
