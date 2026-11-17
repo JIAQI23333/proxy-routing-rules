@@ -1,0 +1,111 @@
+#!name=五组手动分流·域名精简版
+#!desc=仅内置日常域名，用于对照排查。先关闭原五组模块；仍需已有五个同名手动策略组。
+# Modified by JIAQI23333 on 2026-11-17. GPL-2.0.
+# Derived from this repository rules/*.list at d430abed434d1266fc54b3c27f949e25ea456379.
+# Upstream authors: blackmatrix7; v2fly/domain-list-community contributors.
+# Licenses: ../rules/LICENSE-GPL-2.0 and ../rules/LICENSE-v2fly-MIT.
+# All routing rules are inline: no nested RULE-SET downloads or ASN database.
+# No IP-only voice routing is provided. Enable only one five-group module.
+
+[Rule]
+
+# GPT-美国手动
+DOMAIN-SUFFIX,chatgpt.com,GPT-美国手动
+DOMAIN-SUFFIX,openai.com,GPT-美国手动
+DOMAIN-SUFFIX,oaistatic.com,GPT-美国手动
+DOMAIN-SUFFIX,oaiusercontent.com,GPT-美国手动
+DOMAIN-SUFFIX,oaistatsig.com,GPT-美国手动
+DOMAIN-SUFFIX,chat.com,GPT-美国手动
+DOMAIN-SUFFIX,chatgpt.site,GPT-美国手动
+DOMAIN-SUFFIX,openai.com.cdn.cloudflare.net,GPT-美国手动
+DOMAIN,cdn.openaimerge.com,GPT-美国手动
+DOMAIN,openaiassets.blob.core.windows.net,GPT-美国手动
+DOMAIN,openaicomproductionae4b.blob.core.windows.net,GPT-美国手动
+DOMAIN,production-openaicom-storage.azureedge.net,GPT-美国手动
+DOMAIN,openaicom-api-bdcpf8c6d2e9atf6.z01.azurefd.net,GPT-美国手动
+DOMAIN-SUFFIX,openaiapi-site.azureedge.net,GPT-美国手动
+DOMAIN-SUFFIX,openaicom.imgix.net,GPT-美国手动
+DOMAIN-KEYWORD,chatgpt-async-webps-prod-,GPT-美国手动
+DOMAIN,challenges.cloudflare.com,GPT-美国手动
+DOMAIN,openai-api.arkoselabs.com,GPT-美国手动
+DOMAIN,cdn.workos.com,GPT-美国手动
+DOMAIN,setup.workos.com,GPT-美国手动
+DOMAIN,forwarder.workos.com,GPT-美国手动
+DOMAIN,frontend-apps-multi-region.workos.com,GPT-美国手动
+DOMAIN,images.workoscdn.com,GPT-美国手动
+DOMAIN,workos.imgix.net,GPT-美国手动
+DOMAIN-SUFFIX,api.statsig.com,GPT-美国手动
+DOMAIN-SUFFIX,events.statsigapi.net,GPT-美国手动
+DOMAIN-SUFFIX,featuregates.org,GPT-美国手动
+DOMAIN-SUFFIX,chatgpt.livekit.cloud,GPT-美国手动
+DOMAIN-SUFFIX,host.livekit.cloud,GPT-美国手动
+DOMAIN-SUFFIX,turn.livekit.cloud,GPT-美国手动
+
+# Instagram-香港手动
+DOMAIN-SUFFIX,instagram.com,Instagram-香港手动
+DOMAIN-SUFFIX,cdninstagram.com,Instagram-香港手动
+DOMAIN-SUFFIX,instagr.am,Instagram-香港手动
+DOMAIN-SUFFIX,ig.me,Instagram-香港手动
+DOMAIN-SUFFIX,igcdn.com,Instagram-香港手动
+DOMAIN-SUFFIX,igsonar.com,Instagram-香港手动
+DOMAIN-SUFFIX,igtv.com,Instagram-香港手动
+
+# X-香港手动
+DOMAIN-SUFFIX,x.com,X-香港手动
+DOMAIN-SUFFIX,twitter.com,X-香港手动
+DOMAIN-SUFFIX,t.co,X-香港手动
+DOMAIN-SUFFIX,twimg.com,X-香港手动
+DOMAIN-SUFFIX,twttr.com,X-香港手动
+DOMAIN-SUFFIX,twttr.net,X-香港手动
+DOMAIN-SUFFIX,twvid.com,X-香港手动
+DOMAIN-SUFFIX,twitteroauth.com,X-香港手动
+DOMAIN-SUFFIX,twitter.map.fastly.net,X-香港手动
+DOMAIN-SUFFIX,pscp.tv,X-香港手动
+DOMAIN-SUFFIX,periscope.tv,X-香港手动
+
+# TikTok-台湾手动
+DOMAIN-SUFFIX,tiktok.com,TikTok-台湾手动
+DOMAIN-SUFFIX,tiktokv.com,TikTok-台湾手动
+DOMAIN-SUFFIX,tiktokv.us,TikTok-台湾手动
+DOMAIN-SUFFIX,tiktokv.eu,TikTok-台湾手动
+DOMAIN-SUFFIX,tiktokcdn.com,TikTok-台湾手动
+DOMAIN-SUFFIX,tiktokcdn-us.com,TikTok-台湾手动
+DOMAIN-SUFFIX,tiktokcdn-eu.com,TikTok-台湾手动
+DOMAIN-SUFFIX,tiktokeu-cdn.com,TikTok-台湾手动
+DOMAIN-SUFFIX,tiktokrow-cdn.com,TikTok-台湾手动
+DOMAIN-SUFFIX,tiktokstaticb.com,TikTok-台湾手动
+DOMAIN-SUFFIX,tik-tokapi.com,TikTok-台湾手动
+DOMAIN-SUFFIX,tiktokd.net,TikTok-台湾手动
+DOMAIN-SUFFIX,tiktokd.org,TikTok-台湾手动
+DOMAIN-SUFFIX,musical.ly,TikTok-台湾手动
+DOMAIN-SUFFIX,muscdn.com,TikTok-台湾手动
+DOMAIN-SUFFIX,ibyteimg.com,TikTok-台湾手动
+DOMAIN-SUFFIX,ibytedtos.com,TikTok-台湾手动
+DOMAIN-SUFFIX,byteoversea.com,TikTok-台湾手动
+DOMAIN-SUFFIX,byteintlapi.com,TikTok-台湾手动
+DOMAIN-SUFFIX,isnssdk.com,TikTok-台湾手动
+DOMAIN-SUFFIX,bytegecko-i18n.com,TikTok-台湾手动
+DOMAIN-SUFFIX,ttwebview.com,TikTok-台湾手动
+DOMAIN-SUFFIX,ttlivecdn.com,TikTok-台湾手动
+DOMAIN-SUFFIX,ttcdn-us.com,TikTok-台湾手动
+DOMAIN-SUFFIX,ttoverseaus.net,TikTok-台湾手动
+DOMAIN-SUFFIX,tiktokshop.com,TikTok-台湾手动
+DOMAIN-SUFFIX,tiktokglobalshopv.com,TikTok-台湾手动
+DOMAIN,p16-tiktokcdn-com.akamaized.net,TikTok-台湾手动
+DOMAIN,lf16-effectcdn.byteeffecttos-g.com,TikTok-台湾手动
+DOMAIN,lf16-pkgcdn.pitaya-clientai.com,TikTok-台湾手动
+
+# Facebook-香港手动
+DOMAIN-SUFFIX,facebook.com,Facebook-香港手动
+DOMAIN-SUFFIX,facebook.net,Facebook-香港手动
+DOMAIN-SUFFIX,fbcdn.net,Facebook-香港手动
+DOMAIN-SUFFIX,fbcdn.com,Facebook-香港手动
+DOMAIN-SUFFIX,fbcdn-a.akamaihd.net,Facebook-香港手动
+DOMAIN-SUFFIX,fbsbx.com,Facebook-香港手动
+DOMAIN-SUFFIX,fbsbx.net,Facebook-香港手动
+DOMAIN-SUFFIX,fb.com,Facebook-香港手动
+DOMAIN-SUFFIX,fb.me,Facebook-香港手动
+DOMAIN-SUFFIX,fb.watch,Facebook-香港手动
+DOMAIN-SUFFIX,messenger.com,Facebook-香港手动
+DOMAIN-SUFFIX,fbmessenger.com,Facebook-香港手动
+DOMAIN-SUFFIX,m.me,Facebook-香港手动

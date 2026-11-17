@@ -24,6 +24,7 @@ rules/
   LICENSE-GPL-2.0
   LICENSE-v2fly-MIT
 shadowrocket/routing.sgmodule
+shadowrocket/routing-lite.sgmodule
 mihomo/override.js
 README.md
 LICENSE
@@ -75,6 +76,28 @@ LICENSE
 ```
 
 ## Shadowrocket
+
+### iOS 访问异常时的精简版对照
+
+如果模块能导入、五个组已建立并选好节点，但启用后 GPT 等网站或图片无法访问，可使用[域名精简版模块](https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/shadowrocket/routing-lite.sgmodule)做对照。它共 **91 条**内置规则：GPT 30、Instagram 7、X 11、TikTok 30、Facebook 13。
+
+精简版保留主站、图片/文件、登录、视频/直播和语音相关域名，去掉 IP、ASN、历史域名和宽泛的第三方根域名。全部规则直接写在模块中，使用时不再下载五份远程规则集，也不依赖本模块触发 ASN 数据库查询。它不覆盖仅通过 IP 连接的语音等流量，这部分仍由主配置处理。
+
+1. 保持原先选择的节点；**关闭原来的「五组手动分流」模块**，避免两个版本同时生效。
+2. 导入下方地址，启用「五组手动分流·域名精简版」：
+
+   ```text
+   https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/shadowrocket/routing-lite.sgmodule
+   ```
+
+3. 全局路由设为「配置」，使用/编译当前配置后重新连接，重开 GPT，依次测试文字、图片上传和图片生成。
+4. 如果仍失败，再关闭精简版，用**同一个节点和之前能用的规则**测试。两边都失败时，应检查节点对该服务的可用性、DNS及主配置；只有开启某模块才失败时，记录失败请求的域名、命中规则和策略组后进一步定位。
+
+模块仍引用上表的五个本机策略组，不会自动创建它们。此精简版用于隔离排查，不能把测试结果直接解释为“规则条数太多”：两版还同时改变了匹配范围、IP/ASN 和远程下载依赖。已检查内置规则格式、五组映射、关键域名匹配，并通过 Mihomo v1.19.34 语法校验；尚未在真实 iOS 上确认能解决访问问题。
+
+精简版的规则内置于模块，后续更新需要**更新模块并重新应用配置**。刷新 `rules/*.list` 不会改变已经下载的精简模块。
+
+### 共享规则集完整版
 
 1. 备份当前配置。在「配置 → 当前配置的 ⓘ → 代理分组」建立上表五个组，类型全部选择 `select`；从本机已有订阅中加入对应地区的节点。不要把自动测速组作为候选。
 2. 在「配置 → 模块 → +」导入以下地址并启用。模块引用本机策略组，不负责创建组：
@@ -137,4 +160,4 @@ TikTok 的分流只决定命中流量的代理出口，不修改账号地区、S
 - [OpenAI 网络域名说明](https://help.openai.com/en/articles/9247338-network-recommendations-for-chatgpt-errors-on-web-and-apps)：GPT 依赖和语音连接要求。
 - [blackmatrix7 服务规则](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash)及 [v2fly 服务域名](https://github.com/v2fly/domain-list-community/tree/master/data)：扩充来源，精确版本见上文和文件头。
 
-原创客户端配置和说明采用 [MIT License](LICENSE)。`rules/*.list` 包含改编的第三方规则，按 [GPL v2](rules/LICENSE-GPL-2.0) 提供；其中 v2fly 内容保留其 [MIT 版权与许可声明](rules/LICENSE-v2fly-MIT)。每份规则文件均注明来源、上游版本和修改日期。
+原创客户端配置和说明采用 [MIT License](LICENSE)。`rules/*.list` 及内置这些规则选集的 `shadowrocket/routing-lite.sgmodule` 包含改编的第三方规则，按 [GPL v2](rules/LICENSE-GPL-2.0) 提供；其中 v2fly 内容保留其 [MIT 版权与许可声明](rules/LICENSE-v2fly-MIT)。规则文件均注明来源、上游版本和修改日期。
