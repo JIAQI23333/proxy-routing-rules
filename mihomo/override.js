@@ -2,17 +2,34 @@
 // Nodes stay in your local subscription. Region filters only inspect node names.
 function main(config) {
   var base = "https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/";
-  var us = "(?i)(美国|美國|🇺🇸|united[ _-]?states|(^|[^a-z])(us|usa)([^a-z]|$))";
-  var hk = "(?i)(香港|🇭🇰|hong[ _-]?kong|(^|[^a-z])hk([^a-z]|$))";
-  var tw = "(?i)(台湾|台灣|臺灣|台北|臺北|🇹🇼|taiwan|taipei|(^|[^a-z])tw([^a-z]|$))";
+  var regions = {
+    hk: { name: "香港手动", filter: "(?i)(香港|🇭🇰|hong[ _-]?kong|(^|[^a-z])hk([^a-z]|$))" },
+    tw: { name: "台湾手动", filter: "(?i)(台湾|台灣|臺灣|台北|臺北|🇹🇼|taiwan|taipei|(^|[^a-z])tw([^a-z]|$))" },
+    us: { name: "美国手动", filter: "(?i)(美国|美國|🇺🇸|united[ _-]?states|(^|[^a-z])(us|usa)([^a-z]|$))" }
+  };
   var routes = [
-    { id: "gpt", group: "GPT-美国手动", filter: us },
-    { id: "instagram", group: "Instagram-香港手动", filter: hk },
-    { id: "x", group: "X-香港手动", filter: hk },
-    { id: "tiktok", group: "TikTok-台湾手动", filter: tw },
-    { id: "facebook", group: "Facebook-香港手动", filter: hk }
+    { id: "google", region: "us" },
+    { id: "gpt", region: "us" },
+    { id: "instagram", region: "hk" },
+    { id: "x", region: "hk" },
+    { id: "tiktok", region: "tw" },
+    { id: "facebook", region: "hk" }
   ];
-  var groupNames = routes.map(function (route) { return route.group; });
+  var newGroups = Object.keys(regions).map(function (id) {
+    var region = regions[id];
+    return {
+      name: region.name,
+      type: "select",
+      // Keep the selector usable without matching nodes, without falling back to DIRECT.
+      proxies: ["REJECT"],
+      "include-all": true,
+      filter: region.filter
+    };
+  });
+  // Drop selectors created by the previous version when reapplying to an already patched config.
+  var groupNames = newGroups.map(function (group) { return group.name; }).concat([
+    "GPT-美国手动", "Instagram-香港手动", "X-香港手动", "TikTok-台湾手动", "Facebook-香港手动"
+  ]);
   var providerNames = routes.map(function (route) { return "prr-" + route.id; });
   var providers = config["rule-providers"] || {};
   var groups = (config["proxy-groups"] || []).filter(function (group) {
@@ -24,9 +41,7 @@ function main(config) {
       providerNames.indexOf((parts[1] || "").trim()) !== -1);
   });
 
-  var newGroups = [];
-  var newRules = [];
-  routes.forEach(function (route) {
+  var newRules = routes.map(function (route) {
     var provider = "prr-" + route.id;
     providers[provider] = {
       type: "http",
@@ -36,16 +51,7 @@ function main(config) {
       path: "./ruleset/proxy-routing-rules/" + route.id + ".list",
       interval: 86400
     };
-    newGroups.push({
-      name: route.group,
-      type: "select",
-      // REJECT remains available even when no regional node matches.
-      // On first use, select a real regional node in each of the five groups.
-      proxies: ["REJECT"],
-      "include-all": true,
-      filter: route.filter
-    });
-    newRules.push("RULE-SET," + provider + "," + route.group);
+    return "RULE-SET," + provider + "," + regions[route.region].name;
   });
 
   // Replace only this project's entries, so applying the script twice is safe.
