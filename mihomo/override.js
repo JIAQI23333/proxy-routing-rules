@@ -7,22 +7,13 @@ function main(config) {
     tw: { name: "台湾手动", filter: "(?i)(台湾|台灣|臺灣|台北|臺北|🇹🇼|taiwan|taipei|(^|[^a-z])tw([^a-z]|$))" },
     us: { name: "美国手动", filter: "(?i)(美国|美國|🇺🇸|united[ _-]?states|(^|[^a-z])(us|usa)([^a-z]|$))" }
   };
-  var gptGroup = {
-    name: "美国自动",
-    type: "url-test",
-    "include-all": true,
-    filter: regions.us.filter,
-    url: "https://www.gstatic.com/generate_204",
-    interval: 300,
-    tolerance: 50,
-    "expected-status": 204,
-    "empty-fallback": "REJECT"
-  };
+  var automatic = { us: "GPT-美国自动", hk: "香港自动" };
   // Gemini and YouTube exceptions must precede the general Google suffixes.
   var routes = [
+    { id: "github", group: automatic.hk },
     { id: "instagram-x-youtube-facebook-gemini", group: regions.hk.name },
     { id: "google", group: regions.us.name },
-    { id: "gpt", group: gptGroup.name },
+    { id: "gpt", group: automatic.us },
     { id: "tiktok", group: regions.tw.name }
   ];
   var newGroups = Object.keys(regions).map(function (id) {
@@ -36,10 +27,22 @@ function main(config) {
       filter: region.filter
     };
   });
-  newGroups.push(gptGroup);
+  newGroups = newGroups.concat(Object.keys(automatic).map(function (region) {
+    return {
+      name: automatic[region],
+      type: "url-test",
+      "include-all": true,
+      filter: regions[region].filter,
+      url: "https://www.gstatic.com/generate_204",
+      interval: 300,
+      tolerance: 50,
+      "expected-status": 204,
+      "empty-fallback": "REJECT"
+    };
+  }));
   // Drop selectors created by the previous version when reapplying to an already patched config.
   var groupNames = newGroups.map(function (group) { return group.name; }).concat([
-    "GPT-美国手动", "Instagram-香港手动", "X-香港手动", "TikTok-台湾手动", "Facebook-香港手动"
+    "美国自动", "GPT-美国手动", "Instagram-香港手动", "X-香港手动", "TikTok-台湾手动", "Facebook-香港手动"
   ]);
   var retiredProviders = ["prr-instagram", "prr-x", "prr-facebook"];
   var providerNames = routes.map(function (route) { return "prr-" + route.id; }).concat(retiredProviders);

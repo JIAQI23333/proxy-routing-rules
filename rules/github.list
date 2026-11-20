@@ -1,0 +1,20 @@
+# NAME: GitHub
+# UPDATED: 2026-11-20
+# SOURCE: https://docs.github.com/en/actions/reference/runners/self-hosted-runners
+# SOURCE: https://docs.github.com/en/enterprise-cloud@latest/admin/configuring-settings/hardening-security-for-your-enterprise/restricting-access-to-githubcom-using-a-corporate-proxy
+# SOURCE: https://docs.github.com/en/copilot/reference/copilot-allowlist-reference
+# SOURCE: https://docs.github.com/en/enterprise-cloud@latest/admin/data-residency/network-details-for-ghecom
+
+# GitHub web, Git via HTTPS/SSH, API, releases, LFS, Actions and package registries.
+DOMAIN,github-cloud.s3.amazonaws.com
+DOMAIN-SUFFIX,ghe.com
+DOMAIN-SUFFIX,ghcr.io
+DOMAIN-SUFFIX,github.com
+DOMAIN-SUFFIX,githubassets.com
+DOMAIN-SUFFIX,githubusercontent.com
+DOMAIN-SUFFIX,githubapp.com
+DOMAIN-SUFFIX,github.io
+DOMAIN-SUFFIX,github.dev
+DOMAIN-SUFFIX,githubcopilot.com
+DOMAIN-SUFFIX,githubstatus.com
+DOMAIN-SUFFIX,github.blog

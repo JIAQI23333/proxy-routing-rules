@@ -9,14 +9,16 @@ Shadowrocket（小火箭）、Clash Party 和 Clash Verge Rev 共用同一套分
 | `香港手动` | `select` | Instagram、X / Twitter、YouTube、Facebook、Gemini 网页与 iOS App |
 | `台湾手动` | `select` | TikTok |
 | `美国手动` | `select` | Google 通用服务、Google One、Google Payments 和开发者 API |
-| `美国自动` | `url-test` | GPT / ChatGPT |
+| `GPT-美国自动` | `url-test` | GPT / ChatGPT |
+| `香港自动` | `url-test` | GitHub |
 
-手动组各自选节点。`美国自动` 从美国候选节点中测速选择。
+手动组各自选节点。两个自动组分别从美国、香港的候选节点中测速选择。
 
 ## 文件
 
 ```text
 rules/
+  github.list
   google.list
   gpt.list
   instagram-x-youtube-facebook-gemini.list
@@ -33,6 +35,10 @@ README.md
 `.list` 使用两种客户端共同支持的 `DOMAIN`、`DOMAIN-SUFFIX`、`DOMAIN-KEYWORD`、`IP-CIDR`、`IP-CIDR6` 和 `IP-ASN`。客户端配置负责把每份清单指向相应的地区组。仓库只存公开规则和配置逻辑，节点、订阅地址、密码和 Token 留在客户端。
 
 ## 覆盖范围与来源
+
+### GitHub
+
+`github.list` 单独指向 `香港自动`。覆盖 GitHub 网站、Git 的 HTTPS 和 SSH 主机、API、Raw、Release、LFS、Actions、Packages、容器镜像、Pages、Codespaces 和 GitHub Copilot。GitHub 使用的共享云和第三方服务按各自的域名匹配。规则在 GPT 的域名关键词之前匹配，GitHub 上带有 OpenAI 字样的项目或站点仍走香港自动。 [GitHub 网络域名说明](https://docs.github.com/en/actions/reference/runners/self-hosted-runners) · [GitHub Copilot 域名说明](https://docs.github.com/en/copilot/reference/copilot-allowlist-reference)
 
 ### Gemini 网页、iOS App 和 YouTube
 
@@ -72,7 +78,7 @@ README.md
 
 ## 覆盖优先的取舍
 
-- GPT 保留 Auth0、Stripe、Sentry、WorkOS、Cloudflare 验证等共享依赖。这些域名被其他软件使用时也会命中 `美国自动`。GPT 的图片和文件域名包含 `oaiusercontent.com`、`oaistatic.com` 及 Azure 存储和异步处理地址。字节系的 `ibyteimg.com` 由 TikTok 清单匹配。
+- GPT 保留 Auth0、Stripe、Sentry、WorkOS、Cloudflare 验证等共享依赖。这些域名被其他软件使用时也会命中 `GPT-美国自动`。GPT 的图片和文件域名包含 `oaiusercontent.com`、`oaistatic.com` 及 Azure 存储和异步处理地址。字节系的 `ibyteimg.com` 由 TikTok 清单匹配。
 - 未采用 OpenAI 上游的 `IP-ASN,20473`：它覆盖 [Vultr 的网络](https://docs.vultr.com/vultr-ip-space)，会把无关云服务器一起划入 GPT。改用 OpenAI 官方发布的语音 IP 明细，并保留上游两条单 IP 规则。
 - TikTok 排除 CapCut、Trae、MarsCode、TikTok Music 的独立域名；X 排除独立的 `grok.com`；GPT 排除独立的 `sora.com`、`crixet.com`；Facebook 排除 WhatsApp、Oculus、Workplace 的独立域名。保留完成目标软件功能所用的共享依赖，因此这些其他软件访问共享域名时仍可能命中。
 - `USER-AGENT` 和 `PROCESS-NAME` 没有放入共享文件：两种客户端及不同操作系统的支持不一致。TikTok 使用域名和关键词匹配。广告/统计标记在导入时仅作为来源标注，不生成拦截规则。
@@ -84,24 +90,24 @@ README.md
 
 ```text
 1. 使用 JIAQI23333/proxy-routing-rules 公开仓库的 main 分支。
-2. 维护四份 rules/*.list，供两个客户端共用。
-3. Shadowrocket 建立表中的三个手动组和一个美国自动组，再导入并启用 routing.sgmodule。
+2. 维护五份 rules/*.list，供两个客户端共用。
+3. Shadowrocket 建立表中的三个手动组和两个自动组，再导入并启用 routing.sgmodule。
 4. Clash Party 导入 override.js 为 JavaScript 覆写，绑定当前订阅并重新应用。
 5. Clash Verge Rev 将同一份 override.js 全文粘贴到当前订阅的扩展脚本，保存并重新应用。
-6. 在三个手动组里分别选节点，确认美国自动组已测速、四份清单均已下载，再从连接日志核对出口。
+6. 在三个手动组里分别选节点，确认两个自动组已测速、五份清单均已下载，再从连接日志核对出口。
 7. 更新服务域名时修改对应的 .list，保留香港清单优先于 Google 通用清单的顺序。
 ```
 
 ## Shadowrocket
 
-1. 备份当前配置。在「配置 → 当前配置的 ⓘ → 代理分组」按表建立组，从本机订阅加入对应地区的节点。`美国自动` 设为 `url-test`，候选仅选美国节点。已有同名组时检查类型和候选即可。
+1. 备份当前配置。在「配置 → 当前配置的 ⓘ → 代理分组」按表建立组，从本机订阅加入对应地区的节点。可把旧的 `美国自动` 改名为 `GPT-美国自动`，再新增 `香港自动`。两个自动组都使用 `url-test`，候选分别为美国节点和香港节点。
 2. 在「配置 → 模块 → +」导入以下地址并启用。已导入同一地址时直接更新模块。升级前关闭设备上以前下载的精简版。
 
    ```text
    https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/shadowrocket/routing.sgmodule
    ```
 
-3. 使用或编译当前配置，确认四份规则均已下载。将全局路由设为「配置」，选好手动组节点后重新连接。
+3. 使用或编译当前配置，确认五份规则均已下载。将全局路由设为「配置」，选好手动组节点后重新连接。
 4. 检查自定义规则或其他模块中的旧组名和独立社交清单链接，更新为当前组名及合并清单。已有其他模块匹配相同域名时，按连接日志调整模块顺序。
 
 域名规则变化后，在「规则集 URL」刷新资源，并使用/编译配置；模块文件变化后，先更新模块再重新应用。仅刷新模块不等于所有规则资源都已重新加载。
@@ -117,17 +123,23 @@ https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/mihomo/ove
 - **Clash Party**：在「覆写」导入这个远程 JS；也可以新建 JavaScript 覆写并粘贴全文。把覆写关联到正在使用的订阅，保存后重新应用订阅。
 - **Clash Verge Rev**：右键当前订阅，打开「扩展脚本」，粘贴脚本全文并保存、重新应用。已有脚本时先备份并合并逻辑，文件中保留一个 `main(config)` 入口。
 
-切换到「规则」模式，在三个手动组选择实际节点。`美国自动` 对美国候选节点进行测速。脚本按节点名称中的国家名、英文地区缩写或旗帜筛选。使用 `proxy-providers` 的节点时，节点提供者负责自己的健康检查。 [Mihomo 策略组参数](https://wiki.metacubex.one/en/config/proxy-groups/)
+切换到「规则」模式，在三个手动组选择实际节点。两个自动组按节点名称中的国家名、英文地区缩写或旗帜筛选后测速。使用 `proxy-providers` 的节点时，节点提供者负责自己的健康检查。 [Mihomo 策略组参数](https://wiki.metacubex.one/en/config/proxy-groups/)
 
-名称用于筛选候选，连接日志可核对实际出口。手动组默认 `REJECT`，选过的组沿用客户端保存的节点。`美国自动` 没有匹配节点时使用 `REJECT`。
+名称用于筛选候选，连接日志可核对实际出口。手动组默认 `REJECT`，选过的组沿用客户端保存的节点。自动组没有匹配节点时使用 `REJECT`。
 
-脚本把本项目的四条 `RULE-SET` 放到原规则前面，重新应用时替换本项目的旧组和旧规则。自定义规则若引用了旧的独立社交规则集或旧组名，请同步更新。其他覆写若之后又重写规则或代理组，需调整执行顺序。
+脚本把本项目的五条 `RULE-SET` 放到原规则前面，重新应用时替换本项目的旧组和旧规则。自定义规则或组若引用了旧的独立社交规则集或旧组名，请同步更新。其他覆写若之后又重写规则或代理组，需调整执行顺序。
 
-Mihomo 每 `86400` 秒更新四份 `.list`，也可在客户端手动更新规则集合。升级时，Party 需要更新远程覆写或重新粘贴，Verge Rev 需要重新粘贴并保存。
+Mihomo 每 `86400` 秒更新五份 `.list`，也可在客户端手动更新规则集合。升级时，Party 需要更新远程覆写或重新粘贴，Verge Rev 需要重新粘贴并保存。
+
+### 查看组内服务与选择自动组
+
+服务对应关系见本页顶部的表。客户端支持查看规则集时，`prr-instagram-x-youtube-facebook-gemini` 对应 `香港手动`，`prr-github` 对应 `香港自动`。Clash 的组内成员是可选的代理或子组。把说明文字做成空壳成员后，选中它会改变实际出口。 [Mihomo 策略组参数](https://wiki.metacubex.one/en/config/proxy-groups/)
+
+`url-test` 是 Mihomo 内置的测速策略，订阅 YAML 本身即可配置。这里的 JavaScript 将策略组加入现有订阅。如果一个手动 `select` 组把自动组列在 `proxies` 里，点击这个组就会委托它持续测速选择实际节点。直接在自动组里指定某个实际节点时，支持固定选择的客户端可能会固定该节点。 [Mihomo 自动测速组](https://wiki.metacubex.one/en/config/proxy-groups/url-test/) · [Mihomo 节点选择接口](https://wiki.metacubex.one/en/api/)
 
 ## 验收与维护
 
-访问 `gemini.google.com`、`aistudio.google.com`、`chatgpt.com`、`instagram.com`、`x.com`、`tiktok.com` 和 `facebook.com`，在连接日志中确认命中的组及选中的节点。测试前断开旧连接，确保客户端接管被测流量。
+访问 `github.com`、`gemini.google.com`、`aistudio.google.com`、`chatgpt.com`、`instagram.com`、`x.com`、`tiktok.com` 和 `facebook.com`，在连接日志中确认命中的组及选中的节点。测试前断开旧连接，确保客户端接管被测流量。
 
 除首页外，按实际使用功能逐项验收：
 
@@ -136,6 +148,7 @@ Mihomo 每 `86400` 秒更新四份 `.list`，也可在客户端手动更新规�
 | Gemini 网页与 iOS App | 在连接日志分别检查首页、登录、对话、上传图片、Gemini Live 以及打开升级页面的分流 |
 | Google 与 YouTube | 检查 AI Studio、Flow、NotebookLM 与 Google One 的美国手动出口，以及 YouTube 播放的香港手动出口 |
 | GPT | 登录、文字对话、上传图片/文件、生成并下载图片、语音对话 |
+| GitHub | 打开仓库、拉取代码、下载 Raw 和 Release 文件，核对香港自动组的节点 |
 | Instagram | 动态图片、Reels、Story、私信附件、上传 |
 | X | 登录、图片、视频、发帖附件、私信、Spaces |
 | TikTok | 视频播放、图片帖、私信贴纸、上传、直播、Shop（账号可用时） |
@@ -147,7 +160,7 @@ TikTok 的出口由 `台湾手动` 选择，账号地区、SIM 和定位由客�
 
 增删域名时编辑对应的 `.list`。修改分流映射时同步更新 Shadowrocket 模块和 Clash 脚本。停用时在客户端关闭模块或取消覆写关联，再重新应用原配置。
 
-Mihomo v1.19.34 已加载四份清单共 1350 条规则，并通过 63 项本机匹配检查。iOS 实机以 Shadowrocket 的连接日志为准。验证时打开升级页即可核对主机与策略组。
+Mihomo v1.19.34 已加载五份清单共 1362 条规则，并通过 33 项本机匹配检查。另用模拟节点确认手动组选择自动子组后，子组可以继续切换节点。iOS 实机以 Shadowrocket 的连接日志为准。
 
 ## 格式与域名参考
 
@@ -157,4 +170,4 @@ Mihomo v1.19.34 已加载四份清单共 1350 条规则，并通过 63 项本机
 - [OpenAI 网络域名说明](https://help.openai.com/en/articles/9247338-network-recommendations-for-chatgpt-errors-on-web-and-apps)：GPT 依赖和语音连接要求。
 - [blackmatrix7 服务规则](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash)及 [v2fly 服务域名](https://github.com/v2fly/domain-list-community/tree/master/data)：扩充来源，精确版本见上文和文件头。
 
-原创客户端配置、说明和 Google 清单采用 MIT。改编的第三方规则按 GPL v2 提供，v2fly 内容保留其 MIT 版权和许可声明。许可文件集中在 `licenses/`，规则来源见各清单文件头。 [MIT License](licenses/LICENSE-MIT) · [GPL v2](licenses/LICENSE-GPL-2.0) · [v2fly MIT 许可](licenses/LICENSE-v2fly-MIT)
+原创客户端配置、说明、Google 和 GitHub 清单采用 MIT。改编的第三方规则按 GPL v2 提供，v2fly 内容保留其 MIT 版权和许可声明。许可文件集中在 `licenses/`，规则来源见各清单文件头。 [MIT License](licenses/LICENSE-MIT) · [GPL v2](licenses/LICENSE-GPL-2.0) · [v2fly MIT 许可](licenses/LICENSE-v2fly-MIT)
