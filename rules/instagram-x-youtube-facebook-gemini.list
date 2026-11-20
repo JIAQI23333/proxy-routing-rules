@@ -1,19 +1,166 @@
-# NAME: Facebook - expanded shared rules
-# AUTHOR: blackmatrix7; v2fly/domain-list-community contributors
-# MODIFIED-BY: JIAQI23333 on 2026-11-17
-# LICENSE: GPL-2.0; see LICENSE-GPL-2.0 and LICENSE-v2fly-MIT
+# NAME: Instagram, X, YouTube, Facebook and Gemini
+# UPDATED: 2026-11-20
+# LICENSE: GPL-2.0; see ../licenses/LICENSE-GPL-2.0 and ../licenses/LICENSE-v2fly-MIT
+# Keep this list before general Google rules in both clients.
+
+# Gemini web and iOS app service hosts
+# SOURCE: https://knowledge.workspace.google.com/admin/generative-ai/gemini-app/gemini-app-firewall-settings
+# SOURCE: https://github.com/v2fly/domain-list-community/blob/master/data/google-deepmind
+# SOURCE: https://www.netify.ai/resources/applications/gemini
+# Shared Google login/payment hosts and the public Gemini API use google.list.
+DOMAIN-SUFFIX,bard.google.com
+DOMAIN-SUFFIX,gemini.google
+DOMAIN-SUFFIX,gemini.google.com
+DOMAIN-SUFFIX,gemini.gstatic.com
+DOMAIN,geller-pa.googleapis.com
+DOMAIN,geminiweb-pa.clients.google.com
+DOMAIN,geminiweb-pa.clients6.google.com
+DOMAIN,geminiweb-pa.googleapis.com
+DOMAIN,jnn-pa.googleapis.com
+DOMAIN,proactivebackend-pa.googleapis.com
+DOMAIN,robinfrontend-pa.googleapis.com
+
+# YouTube, embedded players, and media delivery
+# SOURCE: https://github.com/v2fly/domain-list-community/blob/master/data/youtube
+DOMAIN-SUFFIX,ggpht.cn
+DOMAIN-SUFFIX,ggpht.com
+DOMAIN-SUFFIX,googlevideo.com
+DOMAIN-SUFFIX,withyoutube.com
+DOMAIN-SUFFIX,youtu.be
+DOMAIN-SUFFIX,youtube
+DOMAIN-SUFFIX,youtube-nocookie.com
+DOMAIN-SUFFIX,youtube.com
+DOMAIN-SUFFIX,youtubeeducation.com
+DOMAIN-SUFFIX,youtubekids.com
+DOMAIN-SUFFIX,ytimg.com
+DOMAIN,wide-youtube.l.google.com
+DOMAIN,youtube-ui.l.google.com
+DOMAIN,youtube.googleapis.com
+DOMAIN,youtubei.googleapis.com
+
+# Instagram
+# SOURCE: https://github.com/blackmatrix7/ios_rule_script/blob/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Shadowrocket/Instagram/Instagram.list
+# UPSTREAM-UPDATED: 2025-06-06 09:16:56
+# SOURCE: https://github.com/v2fly/domain-list-community/blob/41504eae2a11f305fe88cfc605cf6c105a80bf5a/data/instagram
+DOMAIN-SUFFIX,achat-followers-instagram.com
+DOMAIN-SUFFIX,acheter-followers-instagram.com
+DOMAIN-SUFFIX,acheterdesfollowersinstagram.com
+DOMAIN-SUFFIX,acheterfollowersinstagram.com
+DOMAIN-SUFFIX,bookstagram.com
+DOMAIN-SUFFIX,carstagram.com
+DOMAIN-SUFFIX,cdninstagram.com
+DOMAIN-SUFFIX,chickstagram.com
+DOMAIN-SUFFIX,ig.me
+DOMAIN-SUFFIX,igcdn.com
+DOMAIN-SUFFIX,igsonar.com
+DOMAIN-SUFFIX,igtv.com
+DOMAIN-SUFFIX,imstagram.com
+DOMAIN-SUFFIX,imtagram.com
+DOMAIN-SUFFIX,instaadder.com
+DOMAIN-SUFFIX,instachecker.com
+DOMAIN-SUFFIX,instafallow.com
+DOMAIN-SUFFIX,instafollower.com
+DOMAIN-SUFFIX,instagainer.com
+DOMAIN-SUFFIX,instagda.com
+DOMAIN-SUFFIX,instagify.com
+DOMAIN-SUFFIX,instagmania.com
+DOMAIN-SUFFIX,instagor.com
+DOMAIN-SUFFIX,instagr.am
+DOMAIN-SUFFIX,instagram-brand.com
+DOMAIN-SUFFIX,instagram-engineering.com
+DOMAIN-SUFFIX,instagram-help.com
+DOMAIN-SUFFIX,instagram-press.com
+DOMAIN-SUFFIX,instagram-press.net
+DOMAIN-SUFFIX,instagram.com
+DOMAIN-SUFFIX,instagramci.com
+DOMAIN-SUFFIX,instagramcn.com
+DOMAIN-SUFFIX,instagramdi.com
+DOMAIN-SUFFIX,instagramhashtags.net
+DOMAIN-SUFFIX,instagramhilecim.com
+DOMAIN-SUFFIX,instagramhilesi.org
+DOMAIN-SUFFIX,instagramium.com
+DOMAIN-SUFFIX,instagramizlenme.com
+DOMAIN-SUFFIX,instagramkusu.com
+DOMAIN-SUFFIX,instagramlogin.com
+DOMAIN-SUFFIX,instagramm.com
+DOMAIN-SUFFIX,instagramn.com
+DOMAIN-SUFFIX,instagrampartners.com
+DOMAIN-SUFFIX,instagramphoto.com
+DOMAIN-SUFFIX,instagramq.com
+DOMAIN-SUFFIX,instagramsepeti.com
+DOMAIN-SUFFIX,instagramtakipcisatinal.net
+DOMAIN-SUFFIX,instagramtakiphilesi.com
+DOMAIN-SUFFIX,instagramtips.com
+DOMAIN-SUFFIX,instagramtr.com
+DOMAIN-SUFFIX,instagran.com
+DOMAIN-SUFFIX,instagranm.com
+DOMAIN-SUFFIX,instagrem.com
+DOMAIN-SUFFIX,instagrm.com
+DOMAIN-SUFFIX,instagtram.com
+DOMAIN-SUFFIX,instagy.com
+DOMAIN-SUFFIX,instamgram.com
+DOMAIN-SUFFIX,instangram.com
+DOMAIN-SUFFIX,instanttelegram.com
+DOMAIN-SUFFIX,instaplayer.net
+DOMAIN-SUFFIX,instastyle.tv
+DOMAIN-SUFFIX,instgram.com
+DOMAIN-SUFFIX,intagram.com
+DOMAIN-SUFFIX,intagrm.com
+DOMAIN-SUFFIX,intgram.com
+DOMAIN-SUFFIX,kingstagram.com
+DOMAIN-SUFFIX,lnstagram-help.com
+DOMAIN-SUFFIX,oninstagram.com
+DOMAIN-SUFFIX,online-instagram.com
+DOMAIN-SUFFIX,onlineinstagram.com
+DOMAIN-SUFFIX,theinstagramhack.com
+DOMAIN-SUFFIX,web-instagram.net
+DOMAIN-SUFFIX,wwwinstagram.com
+DOMAIN-KEYWORD,instagram
+
+# X / Twitter
+# SOURCE: https://github.com/blackmatrix7/ios_rule_script/blob/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Shadowrocket/Twitter/Twitter.list
+# UPSTREAM-UPDATED: 2025-09-28 02:08:26
+# SOURCE: https://github.com/v2fly/domain-list-community/blob/41504eae2a11f305fe88cfc605cf6c105a80bf5a/data/twitter
+DOMAIN-SUFFIX,ads-twitter.com
+DOMAIN-SUFFIX,cms-twdigitalassets.com
+DOMAIN-SUFFIX,periscope.tv
+DOMAIN-SUFFIX,pscp.tv
+DOMAIN-SUFFIX,t.co
+DOMAIN-SUFFIX,tellapart.com
+DOMAIN-SUFFIX,tweetdeck.com
+DOMAIN-SUFFIX,twimg.co
+DOMAIN-SUFFIX,twimg.com
+DOMAIN-SUFFIX,twimg.org
+DOMAIN-SUFFIX,twitpic.com
+DOMAIN-SUFFIX,twitter.biz
+DOMAIN-SUFFIX,twitter.com
+DOMAIN-SUFFIX,twitter.jp
+DOMAIN-SUFFIX,twitter.map.fastly.net
+DOMAIN-SUFFIX,twittercommunity.com
+DOMAIN-SUFFIX,twitterflightschool.com
+DOMAIN-SUFFIX,twitterinc.com
+DOMAIN-SUFFIX,twitteroauth.com
+DOMAIN-SUFFIX,twitterstat.us
+DOMAIN-SUFFIX,twtrdns.net
+DOMAIN-SUFFIX,twttr.com
+DOMAIN-SUFFIX,twttr.net
+DOMAIN-SUFFIX,twvid.com
+DOMAIN-SUFFIX,vine.co
+DOMAIN-SUFFIX,x.com
+DOMAIN-KEYWORD,twitter
+IP-CIDR,192.133.76.0/22,no-resolve
+IP-CIDR,199.59.148.0/22,no-resolve
+IP-CIDR,199.96.56.0/21,no-resolve
+IP-CIDR,202.160.128.0/22,no-resolve
+IP-CIDR,209.237.192.0/19,no-resolve
+IP-CIDR,69.195.160.0/19,no-resolve
+
+# Facebook / Messenger
 # SOURCE: https://github.com/blackmatrix7/ios_rule_script/blob/0b6897dc17e0c513d25449c935a9694818e32f0c/rule/Shadowrocket/Facebook/Facebook.list
 # UPSTREAM-UPDATED: 2025-06-06 09:16:55
 # SOURCE: https://github.com/v2fly/domain-list-community/blob/41504eae2a11f305fe88cfc605cf6c105a80bf5a/data/facebook
-# CHANGES: merge sources; deduplicate; normalize shared syntax; apply the exclusions documented in README.md
 # SOURCE: https://github.com/v2fly/domain-list-community/blob/41504eae2a11f305fe88cfc605cf6c105a80bf5a/data/messenger
 # Shared Meta CDNs/IPs/AS32934 also serve Instagram and other Meta services.
-# DOMAIN-SUFFIX: 442
-# DOMAIN-KEYWORD: 2
-# IP-CIDR: 23
-# IP-ASN: 1
-# TOTAL: 468
-
 DOMAIN-SUFFIX,aboutfacebook.com
 DOMAIN-SUFFIX,accessfacebookfromschool.com
 DOMAIN-SUFFIX,accountkit.com

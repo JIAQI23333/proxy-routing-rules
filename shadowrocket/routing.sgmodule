@@ -1,11 +1,9 @@
-#!name=三地手动分流
-#!desc=使用香港手动、台湾手动、美国手动三个 select 策略组。Google（含 Gemini）和 ChatGPT 使用美国组。
+#!name=个人分流规则
+#!desc=Instagram、X、YouTube、Facebook 和 Gemini 走香港手动，Google 走美国手动，GPT 走美国自动，TikTok 走台湾手动。
 
 # This module references existing local groups; it contains no proxy credentials.
 [Rule]
+RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/instagram-x-youtube-facebook-gemini.list,香港手动
 RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/google.list,美国手动
-RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/gpt.list,美国手动
-RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/instagram.list,香港手动
-RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/x.list,香港手动
+RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/gpt.list,美国自动
 RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/tiktok.list,台湾手动
-RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/facebook.list,香港手动

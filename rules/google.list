@@ -1,4 +1,4 @@
-# NAME: Google services, including Gemini and Google AI
+# NAME: General Google services and developer AI
 # UPDATED: 2026-11-20
 # SOURCE: https://aistudio.google.com/docs
 # SOURCE: https://deepmind.google/models/
@@ -8,10 +8,10 @@
 # SOURCE: https://knowledge.workspace.google.com/admin/meet/prepare-your-network-for-meet-meetings-and-live-streams
 # SOURCE: https://www.google.com/supported_domains
 
-# Dedicated Google AI domains outside the shared Google suffixes below.
-# Gemini, AI Studio, NotebookLM, Flow and Labs use google.com, google, goog
-# and withgoogle.com. Gemini Live, TTS, video, image, and music models share
-# generativelanguage.googleapis.com or regional aiplatform.googleapis.com endpoints.
+# AI Studio, NotebookLM, Flow, Labs and the developer Gemini API use this list.
+# Match the combined Instagram/X/YouTube/Facebook/Gemini list first for the
+# Gemini consumer web/iOS endpoints and YouTube. Shared sign-in, Google One,
+# payments, storage, and developer APIs remain in this list.
 DOMAIN-SUFFIX,ai.google.dev
 DOMAIN-SUFFIX,ai.studio
 DOMAIN-SUFFIX,deepmind.com
@@ -55,19 +55,6 @@ DOMAIN-SUFFIX,gvt3.com
 DOMAIN-SUFFIX,recaptcha.net
 DOMAIN-SUFFIX,widevine.com
 DOMAIN-SUFFIX,withgoogle.com
-
-# YouTube, embedded players, and media delivery.
-DOMAIN-SUFFIX,ggpht.cn
-DOMAIN-SUFFIX,ggpht.com
-DOMAIN-SUFFIX,googlevideo.com
-DOMAIN-SUFFIX,withyoutube.com
-DOMAIN-SUFFIX,youtu.be
-DOMAIN-SUFFIX,youtube
-DOMAIN-SUFFIX,youtube-nocookie.com
-DOMAIN-SUFFIX,youtube.com
-DOMAIN-SUFFIX,youtubeeducation.com
-DOMAIN-SUFFIX,youtubekids.com
-DOMAIN-SUFFIX,ytimg.com
 
 # Regional Google domains from Google's supported domain list.
 DOMAIN-SUFFIX,google.ad

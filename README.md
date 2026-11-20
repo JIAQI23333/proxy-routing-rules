@@ -1,14 +1,17 @@
-# 三地手动分流
+# 个人分流规则
+
+> 本仓库暂时只为我自己的设备、订阅和使用习惯优化维护。
 
 Shadowrocket（小火箭）、Clash Party 和 Clash Verge Rev 共用同一套分流规则，各设备独立选择节点。
 
-| 策略组名称（须完全一致） | 服务 |
-| --- | --- |
-| `香港手动` | Instagram、X / Twitter、Facebook |
-| `台湾手动` | TikTok |
-| `美国手动` | ChatGPT、Gemini 及其他 Google 服务 |
+| 策略组名称（须完全一致） | 类型 | 服务 |
+| --- | --- | --- |
+| `香港手动` | `select` | Instagram、X / Twitter、YouTube、Facebook、Gemini 网页与 iOS App |
+| `台湾手动` | `select` | TikTok |
+| `美国手动` | `select` | Google 通用服务、Google One、Google Payments 和开发者 API |
+| `美国自动` | `url-test` | GPT / ChatGPT |
 
-三个组均为 `select` 手动选择类型。同一地区的服务共用该组选中的节点。以后新增服务时沿用相应地区的组名。
+手动组各自选节点。`美国自动` 从美国候选节点中测速选择。
 
 ## 文件
 
@@ -16,42 +19,42 @@ Shadowrocket（小火箭）、Clash Party 和 Clash Verge Rev 共用同一套分
 rules/
   google.list
   gpt.list
-  instagram.list
-  x.list
+  instagram-x-youtube-facebook-gemini.list
   tiktok.list
-  facebook.list
+licenses/
+  LICENSE-MIT
   LICENSE-GPL-2.0
   LICENSE-v2fly-MIT
 shadowrocket/routing.sgmodule
-shadowrocket/routing-lite.sgmodule
 mihomo/override.js
 README.md
-LICENSE
 ```
 
 `.list` 使用两种客户端共同支持的 `DOMAIN`、`DOMAIN-SUFFIX`、`DOMAIN-KEYWORD`、`IP-CIDR`、`IP-CIDR6` 和 `IP-ASN`。客户端配置负责把每份清单指向相应的地区组。仓库只存公开规则和配置逻辑，节点、订阅地址、密码和 Token 留在客户端。
 
 ## 覆盖范围与来源
 
-### Google 与 Gemini
+### Gemini 网页、iOS App 和 YouTube
 
-2026-11-20 加入 245 条 Google 规则，将下列服务、登录和媒体依赖统一指向 `美国手动`。
+香港合并清单优先匹配 `gemini.google.com`、`gemini.gstatic.com`、`jnn-pa.googleapis.com`、`proactivebackend-pa.googleapis.com`、Gemini 网页后端和 YouTube 的播放、图片及 API 域名。Google 共用账号、OAuth、通用 API、文件存储和静态资源仍按 `google.list` 分流。iOS App 和网页的一次操作可以同时产生两组连接。 [Google Gemini 防火墙说明](https://knowledge.workspace.google.com/admin/generative-ai/gemini-app/gemini-app-firewall-settings) · [v2fly Gemini 域名](https://github.com/v2fly/domain-list-community/blob/master/data/google-deepmind)
 
-| 功能 | 覆盖的入口与依赖 |
-| --- | --- |
-| Gemini 对话、实时语音和摄像头 | Gemini 网站、Google 账号、Gemini Live API |
-| AI Studio、Gemini API、Vertex AI | `aistudio.google.com`、`generativelanguage.googleapis.com`、各区域的 `aiplatform.googleapis.com` API 主机 |
-| 图片、视频、语音和音乐 | Nano Banana、Imagen、Gemini Omni、Veo、Gemini TTS 和 Lyria 经 Gemini、AI Studio、Google Flow、Flow Music 或相应 API 使用 |
-| NotebookLM、Google Vids 和 Google Labs | 音频摘要、视频摘要、AI 旁白、Project Genie 和其他 Labs 入口 |
-| Google 常用服务 | 搜索及其地区域名、Gmail、Drive、Docs、Maps、Photos、Google Play、YouTube 和 Meet |
+### Google 通用服务
 
-Gemini 和其他 Google AI 模型共用网站、API 和文件域名。只要新模型沿用这些入口，就会匹配现有规则。规则覆盖 `google.com`、`googleapis.com`、`googleusercontent.com`、`gstatic.com` 等后缀。其他网站调用 Google 登录、字体、统计或存储资源时，这些请求也会走美国组。Meet 的媒体连接另按官方公布的媒体 IP 匹配。 [Google AI Studio](https://aistudio.google.com/docs) · [Google DeepMind 模型](https://deepmind.google/models/) · [Google Labs](https://labs.google/) · [Google Workspace 网络说明](https://knowledge.workspace.google.com/admin/security/firewall-and-proxy-settings) · [Meet 媒体网络要求](https://knowledge.workspace.google.com/admin/meet/prepare-your-network-for-meet-meetings-and-live-streams)
+搜索、Gmail、Drive、Docs、Maps、Photos、Google Play、Google One 和 Meet 走 `美国手动`。AI Studio、NotebookLM、独立的 Flow 与 Flow Music 网站、Gemini 开发者 API 和 Vertex AI 也走该组。在 Gemini App 或网页内调用模型时，按实际访问的主机名匹配。 [Google AI Studio](https://aistudio.google.com/docs) · [Google Workspace 网络说明](https://knowledge.workspace.google.com/admin/security/firewall-and-proxy-settings)
+
+其他网站调用 Google 登录、字体、统计或存储时，相应请求也会命中 Google 清单。Meet 的实时媒体可按官方发布的媒体 IP 单独匹配。YouTube 的 `googlevideo.com` 和 `ggpht.com` 是共享媒体域名，其他服务访问这些域名时也会走香港组。 [Meet 媒体网络要求](https://knowledge.workspace.google.com/admin/meet/prepare-your-network-for-meet-meetings-and-live-streams)
+
+### Gemini 订阅付款
+
+- 从 Gemini 网页打开升级入口时，Gemini 页面走 `香港手动`。进入 Google One 或 Google Payments 后，`one.google.com`、`payments.google.com` 等匹配 `美国手动`。付款页引入的其他域名各按自身规则匹配。 [Google 的 Gemini 订阅说明](https://support.google.com/gemini/answer/14517446?co=GENIE.Platform%3DiOS)
+- iOS 显示 Apple 内购确认时，Apple 商店和扣款请求沿用设备原有的 Apple 分流。若 App 打开 Google 网页结账，则采用上一条的域名分流。已有 Google One 订阅通常由最初的购买渠道管理。 [Google One 的 iOS 升级说明](https://support.google.com/googleone/answer/16476811?co=GENIE.Platform%3DiOS) · [Apple 账户付款方式](https://support.apple.com/111741)
+- 代理改变请求的出口 IP。Google 付款资料的国家或地区以及 Apple 商店地区由各自的账户资料决定。Google 可能对异常登录或付款要求额外验证，使用与实际账单地区相符的付款方式。 [Google 付款资料](https://support.google.com/paymentscenter/answer/9028746) · [Google 付款验证说明](https://support.google.com/paymentscenter/answer/7644078)
 
 ### ChatGPT 与社交服务
 
 2026-11-17 从原来的 32 条起步规则扩充为 1090 条。合并 blackmatrix7 和 v2fly/domain-list-community 的对应服务清单，并补充 OpenAI 官方网络说明及语音 IP。
 
-| 规则集 | 原数量 → 当前数量 | 此次补充重点 |
+| 服务 | 起步 → 2026-11-17 扩充 | 当时补充重点 |
 | --- | --- | --- |
 | GPT | 6 → 463 | 图片/文件存储、异步任务、验证登录、支付、语音；含官方 411 条语音 IP |
 | Instagram | 3 → 74 | 图片 CDN、私信短链、视频及相关服务域名 |
@@ -69,11 +72,11 @@ Gemini 和其他 Google AI 模型共用网站、API 和文件域名。只要新�
 
 ## 覆盖优先的取舍
 
-- GPT 保留上游的 Auth0、Stripe、Sentry 等共享依赖，并补全官方列出的 WorkOS、Cloudflare 验证等地址。这些域名被其他软件使用时也会命中美国组。`ibyteimg.com` 在参考清单中属于字节系依赖，放入 TikTok 台湾组；GPT 的图片/文件域名包含 `oaiusercontent.com`、`oaistatic.com` 及 Azure 存储和异步处理地址。
+- GPT 保留 Auth0、Stripe、Sentry、WorkOS、Cloudflare 验证等共享依赖。这些域名被其他软件使用时也会命中 `美国自动`。GPT 的图片和文件域名包含 `oaiusercontent.com`、`oaistatic.com` 及 Azure 存储和异步处理地址。字节系的 `ibyteimg.com` 由 TikTok 清单匹配。
 - 未采用 OpenAI 上游的 `IP-ASN,20473`：它覆盖 [Vultr 的网络](https://docs.vultr.com/vultr-ip-space)，会把无关云服务器一起划入 GPT。改用 OpenAI 官方发布的语音 IP 明细，并保留上游两条单 IP 规则。
 - TikTok 排除 CapCut、Trae、MarsCode、TikTok Music 的独立域名；X 排除独立的 `grok.com`；GPT 排除独立的 `sora.com`、`crixet.com`；Facebook 排除 WhatsApp、Oculus、Workplace 的独立域名。保留完成目标软件功能所用的共享依赖，因此这些其他软件访问共享域名时仍可能命中。
 - `USER-AGENT` 和 `PROCESS-NAME` 没有放入共享文件：两种客户端及不同操作系统的支持不一致。TikTok 使用域名和关键词匹配。广告/统计标记在导入时仅作为来源标注，不生成拦截规则。
-- Instagram 专属域名归入 Instagram 清单。共享的 `fbcdn.net`、`fbsbx.com`、Meta IP 和 AS32934 归入 Facebook 清单，两份清单都指向 `香港手动`。其他 Meta 服务访问相同资源也会命中该组。ASN 匹配依赖客户端的 ASN 数据库。
+- Instagram 和 Facebook 共享的 `fbcdn.net`、`fbsbx.com`、Meta IP 和 AS32934 都在香港合并清单。其他 Meta 服务访问相同资源时也会命中。ASN 匹配依赖客户端的 ASN 数据库。
 
 这些是已知依赖的扩充清单，无法保证未来所有功能或所有客户端版本永远不遗漏。此仓库保存的是上述来源的快照，**客户端刷新本仓库不等于实时合并上游变化**；上游新增域名、语音 IP 变更后仍需更新本仓库。
 
@@ -81,45 +84,25 @@ Gemini 和其他 Google AI 模型共用网站、API 和文件域名。只要新�
 
 ```text
 1. 使用 JIAQI23333/proxy-routing-rules 公开仓库的 main 分支。
-2. 维护六份 rules/*.list，供两个客户端共用。
-3. Shadowrocket 建立三个地区 select 策略组，加入对应地区的节点，再导入并启用 routing.sgmodule。
+2. 维护四份 rules/*.list，供两个客户端共用。
+3. Shadowrocket 建立表中的三个手动组和一个美国自动组，再导入并启用 routing.sgmodule。
 4. Clash Party 导入 override.js 为 JavaScript 覆写，绑定当前订阅并重新应用。
 5. Clash Verge Rev 将同一份 override.js 全文粘贴到当前订阅的扩展脚本，保存并重新应用。
-6. 在三个组里分别选择实际节点，确认六份规则已下载，再通过连接日志核对规则和出口。
-7. 更新服务域名时修改对应的 .list，新增服务沿用三个地区组。
+6. 在三个手动组里分别选节点，确认美国自动组已测速、四份清单均已下载，再从连接日志核对出口。
+7. 更新服务域名时修改对应的 .list，保留香港清单优先于 Google 通用清单的顺序。
 ```
 
 ## Shadowrocket
 
-### iOS 访问异常时的精简版对照
-
-三个组均已选好节点且网站或图片仍无法访问时，可用域名精简版模块做对照。精简版共 122 条内置规则，包含 Google 31 条、GPT 30 条、Instagram 7 条、X 11 条、TikTok 30 条和 Facebook 13 条。
-
-精简版将主站、登录、图片和文件、视频和语音相关域名直接写入模块。Google 条目覆盖 Gemini、AI Studio、NotebookLM、Flow 和 Flow Music 的核心域名。更多地区域名及仅通过 IP 连接的语音或视频流量由完整版处理。
-
-1. 在三个地区组里保持相同的节点选择，关闭「三地手动分流」完整版模块。
-2. 导入下面的模块地址，启用「三地手动分流·域名精简版」。
-
-   ```text
-   https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/shadowrocket/routing-lite.sgmodule
-   ```
-
-3. 将全局路由设为「配置」，使用或编译当前配置后重新连接。重新打开受影响的服务，测试同一项功能。
-4. 两个版本都失败时检查节点可用性、DNS 和主配置。只有启用其中一个模块时失败，可记录请求的域名、命中规则和策略组以定位差异。
-
-精简版和完整版共用上表三个本机策略组。精简版内置域名规则，上传新版本后需要更新模块并重新应用配置。
-
-### 共享规则集完整版
-
-1. 备份当前配置。在「配置 → 当前配置的 ⓘ → 代理分组」建立上表三个 `select` 组，从本机订阅中加入对应地区的节点。升级时，可以把每个地区的一组重命名为对应的新名称并合并候选节点。
-2. 在「配置 → 模块 → +」导入以下地址并启用。已导入旧模块时直接更新，模块引用本机已建立的策略组。
+1. 备份当前配置。在「配置 → 当前配置的 ⓘ → 代理分组」按表建立组，从本机订阅加入对应地区的节点。`美国自动` 设为 `url-test`，候选仅选美国节点。已有同名组时检查类型和候选即可。
+2. 在「配置 → 模块 → +」导入以下地址并启用。已导入同一地址时直接更新模块。升级前关闭设备上以前下载的精简版。
 
    ```text
    https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/shadowrocket/routing.sgmodule
    ```
 
-3. 使用或编译当前配置，确认六份规则均已下载。将全局路由设为「配置」，在三个组里分别选好节点后重新连接。
-4. 升级后，检查自定义规则或其他模块中的旧组名，改为相应的地区组后移除多余的旧组。已有其他模块匹配相同域名时，按连接日志调整模块顺序。
+3. 使用或编译当前配置，确认四份规则均已下载。将全局路由设为「配置」，选好手动组节点后重新连接。
+4. 检查自定义规则或其他模块中的旧组名和独立社交清单链接，更新为当前组名及合并清单。已有其他模块匹配相同域名时，按连接日志调整模块顺序。
 
 域名规则变化后，在「规则集 URL」刷新资源，并使用/编译配置；模块文件变化后，先更新模块再重新应用。仅刷新模块不等于所有规则资源都已重新加载。
 
@@ -134,13 +117,13 @@ https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/mihomo/ove
 - **Clash Party**：在「覆写」导入这个远程 JS；也可以新建 JavaScript 覆写并粘贴全文。把覆写关联到正在使用的订阅，保存后重新应用订阅。
 - **Clash Verge Rev**：右键当前订阅，打开「扩展脚本」，粘贴脚本全文并保存、重新应用。已有脚本时先备份并合并逻辑，文件中保留一个 `main(config)` 入口。
 
-切换到「规则」模式，打开三个地区策略组，**升级后首次使用须分别将 `REJECT` 改为实际节点**。脚本按节点名称中的国家名、英文地区缩写或旗帜筛选，支持订阅直接提供的节点及 `proxy-providers`。若组里只有 `REJECT`，先确认订阅有对应地区的节点，再检查脚本中 `regions` 的筛选表达式。
+切换到「规则」模式，在三个手动组选择实际节点。`美国自动` 对美国候选节点进行测速。脚本按节点名称中的国家名、英文地区缩写或旗帜筛选。使用 `proxy-providers` 的节点时，节点提供者负责自己的健康检查。 [Mihomo 策略组参数](https://wiki.metacubex.one/en/config/proxy-groups/)
 
-名称筛选不能验证真实出口地区。`REJECT` 用于未选择节点或没有匹配节点的情况，不自动改走直连或其他地区。切换到实际节点后，该组保持手动选择。
+名称用于筛选候选，连接日志可核对实际出口。手动组默认 `REJECT`，选过的组沿用客户端保存的节点。`美国自动` 没有匹配节点时使用 `REJECT`。
 
-脚本把本项目的六条 `RULE-SET` 放到原规则前面，重新应用时替换本项目的旧组和旧规则，并保留订阅提供的其他规则、组和节点配置。自定义规则或代理组若手动引用了旧组名，请在原配置中改为对应地区的名称。其他覆写若之后又重写规则或代理组，需调整执行顺序。
+脚本把本项目的四条 `RULE-SET` 放到原规则前面，重新应用时替换本项目的旧组和旧规则。自定义规则若引用了旧的独立社交规则集或旧组名，请同步更新。其他覆写若之后又重写规则或代理组，需调整执行顺序。
 
-Mihomo 每 `86400` 秒更新六份 `.list`，也可在客户端手动更新规则集合。JS 修改后，Party 需要更新远程覆写或重新粘贴，Verge Rev 需要重新粘贴并保存。JS 地址用于覆写或扩展脚本。
+Mihomo 每 `86400` 秒更新四份 `.list`，也可在客户端手动更新规则集合。升级时，Party 需要更新远程覆写或重新粘贴，Verge Rev 需要重新粘贴并保存。
 
 ## 验收与维护
 
@@ -150,7 +133,8 @@ Mihomo 每 `86400` 秒更新六份 `.list`，也可在客户端手动更新规�
 
 | 服务 | 建议测试 |
 | --- | --- |
-| Google 与 Gemini | 登录、上传文件或图片、Gemini Live 语音、Flow 视频生成与下载、Flow Music 音乐生成、NotebookLM 音频摘要、YouTube 播放 |
+| Gemini 网页与 iOS App | 在连接日志分别检查首页、登录、对话、上传图片、Gemini Live 以及打开升级页面的分流 |
+| Google 与 YouTube | 检查 AI Studio、Flow、NotebookLM 与 Google One 的美国手动出口，以及 YouTube 播放的香港手动出口 |
 | GPT | 登录、文字对话、上传图片/文件、生成并下载图片、语音对话 |
 | Instagram | 动态图片、Reels、Story、私信附件、上传 |
 | X | 登录、图片、视频、发帖附件、私信、Spaces |
@@ -161,9 +145,9 @@ Mihomo 每 `86400` 秒更新六份 `.list`，也可在客户端手动更新规�
 
 TikTok 的出口由 `台湾手动` 选择，账号地区、SIM 和定位由客户端和设备各自管理。
 
-增删域名时编辑对应的 `.list`，核心域名变化时同步更新精简版。修改分流映射时同步更新 Shadowrocket 模块和 Clash 脚本，沿用表内三个地区组名。停用时在客户端关闭模块或取消覆写关联，再重新应用原配置。
+增删域名时编辑对应的 `.list`。修改分流映射时同步更新 Shadowrocket 模块和 Clash 脚本。停用时在客户端关闭模块或取消覆写关联，再重新应用原配置。
 
-2026-11-20 使用 Mihomo v1.19.34 验证加载六份清单共 1335 条规则，并通过 54 项本机路由匹配检查，包含 Google AI、Meet IPv4 / IPv6 和原有服务。另核对了两份客户端配置的规则映射、Clash 旧组升级、重复应用和订阅地区节点筛选。Shadowrocket 实机导入与实际节点出口待设备侧验收。
+Mihomo v1.19.34 已加载四份清单共 1350 条规则，并通过 63 项本机匹配检查。iOS 实机以 Shadowrocket 的连接日志为准。验证时打开升级页即可核对主机与策略组。
 
 ## 格式与域名参考
 
@@ -173,4 +157,4 @@ TikTok 的出口由 `台湾手动` 选择，账号地区、SIM 和定位由客�
 - [OpenAI 网络域名说明](https://help.openai.com/en/articles/9247338-network-recommendations-for-chatgpt-errors-on-web-and-apps)：GPT 依赖和语音连接要求。
 - [blackmatrix7 服务规则](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash)及 [v2fly 服务域名](https://github.com/v2fly/domain-list-community/tree/master/data)：扩充来源，精确版本见上文和文件头。
 
-原创客户端配置、说明和 Google 清单采用 MIT。改编的第三方规则及内置这些规则选集的 `shadowrocket/routing-lite.sgmodule` 按 GPL v2 提供，其中 v2fly 内容保留其 MIT 版权与许可声明。来源及修改日期见各清单文件头。 [MIT License](LICENSE) · [GPL v2](rules/LICENSE-GPL-2.0) · [v2fly MIT 许可](rules/LICENSE-v2fly-MIT)
+原创客户端配置、说明和 Google 清单采用 MIT。改编的第三方规则按 GPL v2 提供，v2fly 内容保留其 MIT 版权和许可声明。许可文件集中在 `licenses/`，规则来源见各清单文件头。 [MIT License](licenses/LICENSE-MIT) · [GPL v2](licenses/LICENSE-GPL-2.0) · [v2fly MIT 许可](licenses/LICENSE-v2fly-MIT)
