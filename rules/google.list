@@ -1,5 +1,5 @@
-# NAME: General Google services and developer AI
-# UPDATED: 2026-11-20
+# NAME: Google services, Gemini and Antigravity
+# UPDATED: 2026-11-25
 # SOURCE: https://aistudio.google.com/docs
 # SOURCE: https://deepmind.google/models/
 # SOURCE: https://labs.google/
@@ -7,16 +7,24 @@
 # SOURCE: https://knowledge.workspace.google.com/admin/getting-started/set-up-a-google-workspace-host-name-allowlist
 # SOURCE: https://knowledge.workspace.google.com/admin/meet/prepare-your-network-for-meet-meetings-and-live-streams
 # SOURCE: https://www.google.com/supported_domains
+# SOURCE: https://knowledge.workspace.google.com/admin/generative-ai/gemini-app/gemini-app-firewall-settings
+# SOURCE: https://antigravity.google/docs/enterprise/#network-allowlists-and-mtls-endpoints
+# SOURCE: https://docs.cloud.google.com/docs/security/compliance/deploy-antigravity-us-public-sector
+# SOURCE: https://antigravity-ide-auto-updater-974169037036.us-central1.run.app/api/update/darwin-arm64/stable/latest
 
-# AI Studio, NotebookLM, Flow, Labs and the developer Gemini API use this list.
-# Match the combined Instagram/X/YouTube/Facebook/Gemini list first for the
-# Gemini consumer web/iOS endpoints and YouTube. Shared sign-in, Google One,
-# payments, storage, and developer APIs remain in this list.
+# The suffixes below match Gemini web/iOS, AI Studio, NotebookLM, Flow and Labs.
+# Match the YouTube list first for YouTube media and API hosts.
 DOMAIN-SUFFIX,ai.google.dev
 DOMAIN-SUFFIX,ai.studio
 DOMAIN-SUFFIX,deepmind.com
 DOMAIN-SUFFIX,flowmusic.app
 DOMAIN-SUFFIX,gemini-api-docs-mcp.dev
+
+# Antigravity website, OAuth, model APIs and downloads match the shared Google suffixes.
+# The CLI, desktop app and IDE update manifests also use these dedicated Cloud Run hosts.
+DOMAIN,antigravity-cli-auto-updater-974169037036.us-central1.run.app
+DOMAIN,antigravity-hub-auto-updater-974169037036.us-central1.run.app
+DOMAIN,antigravity-ide-auto-updater-974169037036.us-central1.run.app
 
 # Google services, sign-in, APIs, downloads, assets and shared infrastructure.
 DOMAIN-SUFFIX,2mdn.net

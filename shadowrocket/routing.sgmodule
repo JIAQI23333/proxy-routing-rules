@@ -1,10 +1,10 @@
 #!name=个人分流规则
-#!desc=GitHub 走香港自动，Instagram、X、YouTube、Facebook 和 Gemini 走香港手动，Google 走美国手动，GPT 走 GPT-美国自动，TikTok 走台湾手动。
+#!desc=GitHub 和影音社交分别走香港，Google（含 Gemini 和 Antigravity）和 TikTok 分别走台湾，GPT 走美国。
 
 # This module references existing local groups; it contains no proxy credentials.
 [Rule]
-RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/github.list,香港自动
-RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/instagram-x-youtube-facebook-gemini.list,香港手动
-RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/google.list,美国手动
-RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/gpt.list,GPT-美国自动
-RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/tiktok.list,台湾手动
+RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/github.list,香港-GitHub
+RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/instagram-x-youtube-facebook.list,香港-影音社交
+RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/google.list,台湾-Google
+RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/tiktok.list,台湾-TikTok
+RULE-SET,https://raw.githubusercontent.com/JIAQI23333/proxy-routing-rules/main/rules/gpt.list,美国-GPT
